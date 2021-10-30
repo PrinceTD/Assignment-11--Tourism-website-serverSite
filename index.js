@@ -20,7 +20,6 @@ async function run() {
         await client.connect();
         const database = client.db("travel_place");
         const travelCollection = database.collection('place')
-        
 
         // GET total Api
         app.get('/service', async (req, res) => {
@@ -28,6 +27,19 @@ async function run() {
             const travels = await cursor.toArray();
             res.send(travels);
         })
+
+        // post api
+        app.post("/service", async (req, res) => {
+            const travels = req.body;
+            console.log("hit the post", travels);
+
+            const result = await travelCollection.insertOne(travels);
+            console.log(result);
+
+            res.json(result)
+        })
+
+
     }
     finally {
         // await client.close()
