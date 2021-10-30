@@ -20,9 +20,10 @@ async function run() {
         await client.connect();
         const database = client.db("travel_place");
         const travelCollection = database.collection('place')
+        
 
         // GET total Api
-        app.get('/travelItem', async (req, res) => {
+        app.get('/service', async (req, res) => {
             const cursor = travelCollection.find({});
             const travels = await cursor.toArray();
             res.send(travels);
