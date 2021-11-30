@@ -2,6 +2,7 @@ var express = require('express');
 const { MongoClient } = require('mongodb');
 require('dotenv').config()
 const app = express();
+const ObjectId = require('mongodb').ObjectId
 const cors = require('cors')
 const port = process.env.PORT || 5000;
 
@@ -20,8 +21,27 @@ async function run() {
         await client.connect();
         const database = client.db("travel_place");
         const travelCollection = database.collection('place')
+        const myService = database.collection('myPortfolio')
 
         // GET total Api
+
+
+
+        app.get('/myservice', async (req, res) => {
+            const cursor = myService.find({});
+            const product = await cursor.toArray();
+            res.send(product);
+        })
+
+        app.get("/myservice/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("hitting id", id);
+            const query = { _id: ObjectId(id) };
+            const product = await myService.findOne(query)
+            res.json(product);
+        });
+
+
         app.get('/service', async (req, res) => {
             const cursor = travelCollection.find({});
             const travels = await cursor.toArray();
@@ -38,8 +58,6 @@ async function run() {
 
             res.json(result)
         })
-
-
     }
     finally {
         // await client.close()
@@ -53,5 +71,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log("server running", port);
+    console.log("server running heroku", port);
 })
